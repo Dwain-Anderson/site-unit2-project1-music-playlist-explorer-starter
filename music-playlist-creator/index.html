@@ -1,27 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Music Playlist Explorer</title>
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-    
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <!-- Your header content here -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+      <h1 id="page-title">Music Playlist Explorer</h1>
     </header>
 
-    <main> 
-        <!-- Your main content here -->
+    <main>
+      <section class="playlist-cards">
+        <article class="playlist-card" onclick="openModal({title: 'Playlist Title' , imageUrl: '#' , creatorName: 'Creator Name', songs: 
+        [ { title: 'songtitle', imageUrl: '#',  artistName: 'artistName', albumName: 'albumName', duration: 'duration' }]
+         })">
+          <img class="playlist-cover-image" src="#" alt="" />
+          <h3 class="playlist-title">Playlist Title</h3>
+          <p class="playlist-creator-name">Creator Name</p>
+          <div class="playlist-likes-flex-container">
+            <button class="playlist-like-button">
+              <img src="#" class="playlist-like-heart-icon" />LIKEBUTTON
+            </button>
+            <p>LIKECOUNT</p>
+          </div>
+
+          <p class="playlist-like-count"></p>
+        </article>
+      </section>
     </main>
 
+    <div id="playlist-card-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="playlist-cover-image" src="#" alt="playlist Image" />
+        <h2 id="playlist-title"></h2>
+        <h3 id="playlist-creator-name"></h3>
+        <img id="song-image" src="#" alt="" />
+        <p id="song-title"></p>
+        <p id="song-artist-name"></p>
+        <p id="song-album-name"></p>
+        <p id="song-duration"></p>
+      </div>
+    </div>
+
     <footer>
-        <!-- Your footer content here -->
+      <p>placeholder footer</p>
     </footer>
     <script src="data/data.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
