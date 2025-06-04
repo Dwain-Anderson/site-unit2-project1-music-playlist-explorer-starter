@@ -5,16 +5,116 @@ body {
     background-color: #f8f8f8;
 }
 
-header, footer {
+header {
+    display: flex;
+    flex-direction: row;
+    width: 100% auto;
     background-color: rgb(220, 215, 215);
-    border: 1.5px solid grey
+    border: 1.5px solid grey;
+    padding: 20px 10px;
+
+}
+
+h1 {
+    text-align: center;
+    padding: 0px; 
+    font-size: large;
+    margin-right: 50%;
+    color: grey'
+}
+
+nav {
+    display:flex;
+    
+    margin-top: 0px;
+    padding-bottom: 0px;
+}
+
+nav ul {
+    margin: 0%;
+    padding: 0%;
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+
+}
+
+nav ul li {
+    list-style-type: none;
+    
+    font-size: large;
+}
+
+ul li {
+    padding: 2%;
+    
+}
+
+li a {
+   padding: 2%;
+}
+
+.playlist-cards {
+    display: block;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.playlist-card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 4px solid black ;
+    padding: 10px
+}
+
+.playlist-cover-image {
+    width: 175px
+
+}
+
+.playlist-title {
+
+}
+
+.playlist-likes-flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.playlist-like-button {
+
+}
+
+.playlist-like-count {
+
 }
 
 
-h1 {
-    margin: 10px;
-    font-size: large;
-    color: grey'
+#song-duration {
+
+}
+
+#song-album-name {
+
+}
+
+#song-artist-name {
+
+}
+
+#song-title {
+
+}
+
+#song-image {
+
+}
+
+
+footer {
+    background-color: rgb(220, 215, 215);
+    border: 1.5px solid grey
 }
 
 
@@ -36,12 +136,15 @@ h1 {
    border: 1px solid #888;
    width: 80%; /* Could be more or less, depending on screen size */
 }
+
+
 .close {
    color: #aaa;
    float: right;
    font-size: 28px;
    font-weight: bold;
 }
+
 .close:hover,
 .close:focus {
    color: black;

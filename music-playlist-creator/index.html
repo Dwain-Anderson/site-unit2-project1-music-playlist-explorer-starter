@@ -10,25 +10,34 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <header id ="banner">
       <h1 id="page-title">Music Playlist Explorer</h1>
+      <nav>
+        <ul >
+            <li>
+                <a href="featured.html" class = "nav-link-data">Featured</a>
+            </li>
+            <li>
+                <a href="index.html" class = "nav-link-data">All</a>
+            </li>
+        </ul>
+      </nav>
     </header>
 
     <main>
       <section class="playlist-cards">
-        <article class="playlist-card" onclick="openModal({title: 'Playlist Title' , imageUrl: '#' , creatorName: 'Creator Name', songs: 
-        [ { title: 'songtitle', imageUrl: '#',  artistName: 'artistName', albumName: 'albumName', duration: 'duration' }]
+        <class="playlist-card" onclick="openModal({title: 'Playlist Title' , imageUrl: '/assets/img/playlist.png' , creatorName: 'Creator Name', songs: 
+        [ { title: 'songtitle', imageUrl: 'img/song.png',  artistName: 'artistName', albumName: 'albumName', duration: 'duration' }]
          })">
-          <img class="playlist-cover-image" src="#" alt="" />
+          <img class="playlist-cover-image" src="assets/img/playlist.png" alt="" />
           <h3 class="playlist-title">Playlist Title</h3>
           <p class="playlist-creator-name">Creator Name</p>
           <div class="playlist-likes-flex-container">
             <button class="playlist-like-button">
-              <img src="#" class="playlist-like-heart-icon" />LIKEBUTTON
+              <img src="" class="playlist-like-heart-icon" />LIKEBUTTON
             </button>
-            <p>LIKECOUNT</p>
+             <p class="playlist-like-count">LIKECOUNT</p>
           </div>
-
-          <p class="playlist-like-count"></p>
         </article>
       </section>
     </main>
