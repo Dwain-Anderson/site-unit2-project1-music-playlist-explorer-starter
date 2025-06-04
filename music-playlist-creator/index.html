@@ -3,17 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Music Playlist Explorer</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header id ="banner">
       <h1 id="page-title">Music Playlist Explorer</h1>
       <nav>
-        <ul >
+        <ul>
             <li>
                 <a href="featured.html" class = "nav-link-data">Featured</a>
             </li>
@@ -25,8 +23,8 @@
     </header>
 
     <main>
-      <section class="playlist-cards">
-        <class="playlist-card" onclick="openModal({title: 'Playlist Title' , imageUrl: '/assets/img/playlist.png' , creatorName: 'Creator Name', songs: 
+      <div class="playlist-cards">
+        <div class ="playlist-card" onclick="openModal({title: 'Playlist Title' , imageUrl: '/assets/img/playlist.png' , creatorName: 'Creator Name', songs:
         [ { title: 'songtitle', imageUrl: 'img/song.png',  artistName: 'artistName', albumName: 'albumName', duration: 'duration' }]
          })">
           <img class="playlist-cover-image" src="assets/img/playlist.png" alt="" />
@@ -38,8 +36,8 @@
             </button>
              <p class="playlist-like-count">LIKECOUNT</p>
           </div>
-        </article>
-      </section>
+        </div>
+      </div>
     </main>
 
     <div id="playlist-card-modal" class="modal">
