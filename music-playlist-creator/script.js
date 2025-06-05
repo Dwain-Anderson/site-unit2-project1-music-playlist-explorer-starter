@@ -207,7 +207,7 @@ function renderPlaylists(playlists) {
 }
 
 function mountSort() {
-   let sortMenuElement = createHTMLElement(populateHTMLData("div","sort-container", "sort-container", `<form id="sort-form" class="sort-form">
+  let sortMenuElement = createHTMLElement(populateHTMLData("div", "sort-container", "sort-container", `<form id="sort-form" class="sort-form">
     <label id="sort-label" class="sort-label" for="sort-select">Sort playlists by: </label>
       <select id="sort-select" class="sort-select">
         <option id="sort-option-default" class="sort-option" value="default">Default</option>
@@ -222,9 +222,10 @@ function mountSort() {
   sortMenuContainer.appendChild(sortMenuElement);
   let sortMenuForm = document.getElementById("sort-form");
 
-  
-  sortMenuForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+
+  sortMenuForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
     const sortBy = document.getElementById("sort-select").value;
     let sortedPlaylists = [...playlists];
     if (sortBy === "name") {
@@ -241,11 +242,53 @@ function mountSort() {
     renderPlaylists(sortedPlaylists);
   });
 }
-function mountSearch(
-// logic filter out elements that have editdst greater than t
-) {
-  return 0
+
+function editDistance(s, t) {
+  const m = s.length;
+  const n = t.length;
+  let v0 = new Array(n);
+  let v1 = new Array(n);
+  for (let i = 0; i <= n; i++) {
+    v0[i] = i
+  }
+  for (let i = 0; i < m; i++) {
+    v1[0] = i + 1
+    for (let j = 0; j < n; j++) {
+     let cost = s[i] === t[j] ? 0 : 1;
+      v1[j + 1] = Math.min(v1[j] + 1,v0[j + 1] + 1, v0[j] + cost);
+    }
+    [v0, v1] = [v1, v0];
+  }
+  return v0[n]
 }
+function mountSearch() {
+  let searchBarElement = createHTMLElement(populateHTMLData("search", "search-container", "search-container", `<form id="search-form" class="search-form">
+<label for="playlists">Search for playlists</label>
+      <input type="search" id="search-input" name="" />
+      <button type="submit">Search</button>
+  `));
+  let searchBarContainer = document.getElementById("search-partial");
+  searchBarContainer.appendChild(searchBarElement);
+  let searchBarForm = document.getElementById("search-form");
+
+  searchBarForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let query = (document.getElementById("search-input").value).toLowerCase()
+    let searchPlaylists = [...playlists];
+    let editDistances = new Map();
+    for (let playlist of searchPlaylists) {
+      let dist = editDistance(query, playlist.playlist_name.toLowerCase())
+      editDistances.set(playlist.playlist_name, dist)
+    }
+  
+    searchPlaylists.sort((a, b) => {
+      return editDistances.get(a.playlist_name) - editDistances.get(b.playlist_name)
+    })
+    console.log(editDistances)
+ 
+    renderPlaylists(searchPlaylists)
+})}
+
 
 function AllPage() {
   renderHeaderContent();
