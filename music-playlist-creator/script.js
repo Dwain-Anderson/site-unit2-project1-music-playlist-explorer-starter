@@ -1,33 +1,45 @@
-const PAGE_TABLE = [
-  ["ALL", "index.html", AllPage],
-  ["FEATURED", "featured.html", FeaturedPage],
-];
-let currentPageID = PAGE_TABLE[0][0];
+const PAGE_TABLE = {
+  ALL: {
+    path: "index.html",
+    runnable: AllPage,
+  },
+  FEATURED: {
+    path: "featured.html",
+    runnable: FeaturedPage,
+  },
+};
 
 const modal = document.getElementById("playlist-card-modal");
 const span = document.getElementsByClassName("close")[0];
 
+let currentPageID = "ALL";
+
 function renderHeaderContent() {
-  document.getElementById(
-    "header-partial"
-  ).innerHTML = `<h1 id="page-title">Music Playlist Explorer</h1>
+  setElementFields(document.getElementById("header-partial"), {
+    innerHTML: `<h1 id="page-title">Music Playlist Explorer</h1>
       <nav>
         <ul>
             <li>
-                <a href="featured.html" class = "nav-link" id ="${PAGE_TABLE[0][0]}">Featured</a>
+                <a href="featured.html" class = "nav-link" id ="FEATURED">Featured</a>
             </li>
             <li>
-                <a href="index.html" class = "nav-link" id = "${PAGE_TABLE[1][0]}">All</a>
+                <a href="index.html" class = "nav-link" id = "ALL">All</a>
             </li>
         </ul>
-      </nav>`;
-  for (let [pageID, _, __] of PAGE_TABLE) {
-    console.log(pageID);
+      </nav>`,
+  });
 
+  for (let pageID of Object.keys(PAGE_TABLE)) {
     document.getElementById(pageID).addEventListener("click", () => {
       currentPageID = pageID;
     });
   }
+}
+
+function renderFooter() {
+  setElementFields(document.getElementById("footer-partial"), {
+    innerHTML: `<p>Placeholder for footer, you are currently on PAGE=${PAGE_TABLE[currentPageID].path}</p>`,
+  });
 }
 
 function populateHTMLData(element, id, className, innerHTML) {
@@ -101,14 +113,12 @@ function mountLikeButton(playlist, previousLikeState) {
     likeCountElement.innerText = playlist.likeCount;
     previousLikeState = !previousLikeState;
   });
-
-  // set html class to update icon
 }
 
-let randomInt = (k) => Math.floor(Math.random() * (k + 1));
 /**
  * fisher yates shuffle algorithm from wikipedia
  */
+const randomInt = (k) => Math.floor(Math.random() * (k + 1));
 function shuffeList(lst) {
   for (let i = lst.length - 1; i >= 1; i--) {
     let j = randomInt(i);
@@ -116,10 +126,6 @@ function shuffeList(lst) {
     lst[i] = lst[j];
     lst[j] = tmp;
   }
-}
-
-function sortList() {
-  return 0;
 }
 
 function iterateList(container, iterable, func) {
@@ -146,7 +152,7 @@ function createPlaylistElement(playlist) {
       `
       <img class="playlist-cover-image" src=${playlist.playlist_art} alt="" />
           <h3 class="playlist-title">${playlist.playlist_name}</h3>
-          <p class="playlist-creator-name">${playlist.playlist_creator}</p> 
+          <p class="playlist-creator-name">${playlist.playlist_creator}</p>
           <div class="playlist-likes-flex-container" id="playlist-likes-flex-container-${playlist.playlistID}">
           </div>
         </div>
@@ -175,7 +181,7 @@ function openModal(playlist) {
 }
 
 function renderFeaturedPlaylist() {
-  let chosenPlaylist = playlists.at(randomInt(playlists.length - 1));
+  let chosenPlaylist = playlists[randomInt(playlists.length - 1)];
   featuredPlaylistFields = {
     "playlist-title": { innerText: chosenPlaylist.playlist_name },
     "playlist-cover-image": { src: chosenPlaylist.playlist_art },
@@ -200,6 +206,47 @@ function renderPlaylists(playlists) {
   });
 }
 
+function mountSort() {
+   let sortMenuElement = createHTMLElement(populateHTMLData("div","sort-container", "sort-container", `<form id="sort-form" class="sort-form">
+    <label id="sort-label" class="sort-label" for="sort-select">Sort playlists by: </label>
+      <select id="sort-select" class="sort-select">
+        <option id="sort-option-default" class="sort-option" value="default">Default</option>
+        <option id="sort-option-name" class="sort-option" value="name">Playlist Name</option>
+        <option id="sort-option-creator" class="sort-option" value="creator">Creator</option>
+        <option id="sort-option-likes" class="sort-option" value="likes">Likes</option>
+      </select>
+      <button id="sort-button" class="sort-button" type="submit">Sort</button>
+    </form>
+  `));
+  let sortMenuContainer = document.getElementById("sort-partial");
+  sortMenuContainer.appendChild(sortMenuElement);
+  let sortMenuForm = document.getElementById("sort-form");
+
+  
+  sortMenuForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const sortBy = document.getElementById("sort-select").value;
+    let sortedPlaylists = [...playlists];
+    if (sortBy === "name") {
+      sortedPlaylists.sort((a, b) =>
+        a.playlist_name.localeCompare(b.playlist_name)
+      );
+    } else if (sortBy === "creator") {
+      sortedPlaylists.sort((a, b) =>
+        a.playlist_creator.localeCompare(b.playlist_creator)
+      );
+    } else if (sortBy === "likes") {
+      sortedPlaylists.sort((a, b) => b.likeCount - a.likeCount);
+    }
+    renderPlaylists(sortedPlaylists);
+  });
+}
+function mountSearch(
+// logic filter out elements that have editdst greater than t
+) {
+  return 0
+}
+
 function AllPage() {
   renderHeaderContent();
   if (span) {
@@ -212,16 +259,15 @@ function AllPage() {
       };
     };
   }
+  mountSort();
   renderPlaylists(playlists);
+  renderFooter();
+  mountSearch();
 }
 
 function FeaturedPage() {
   renderHeaderContent();
   renderFeaturedPlaylist();
-}
-
-function render404Page() {
-  renderHeaderContent();
 }
 
 function parsePagePath(pathname) {
@@ -234,18 +280,17 @@ function parsePagePath(pathname) {
 }
 
 function pageRouter() {
-  let runnable = render404Page;
+  let pageRunnable = null;
   candidatePath = parsePagePath(window.location.pathname);
-  for (let [pageID, pageBasePath, pageRunnable] of PAGE_TABLE) {
-    console.log([pageID, pageBasePath, pageRunnable]);
-    console.log(candidatePath);
-    if (candidatePath == pageBasePath) {
-      runnable = pageRunnable;
+  for (let [_, pageData] of Object.entries(PAGE_TABLE)) {
+    if (candidatePath == pageData.path) {
+      pageRunnable = pageData.runnable;
       break;
     }
   }
-  console.log(runnable);
-  runnable();
+  if (pageRunnable) {
+    pageRunnable();
+  }
 }
 
 pageRouter();
