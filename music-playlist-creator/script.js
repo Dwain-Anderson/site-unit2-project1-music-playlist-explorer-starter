@@ -1,8 +1,11 @@
+const PAGE_TABLE = [
+  ["ALL", "index.html", AllPage],
+  ["FEATURED", "featured.html", FeaturedPage],
+];
+let currentPageID = PAGE_TABLE[0][0];
+
 const modal = document.getElementById("playlist-card-modal");
 const span = document.getElementsByClassName("close")[0];
-
-
-let currentPage = 0
 
 function renderHeaderContent() {
   document.getElementById(
@@ -11,13 +14,20 @@ function renderHeaderContent() {
       <nav>
         <ul>
             <li>
-                <a href="featured.html" class = "nav-link-data" id = "featured-page-link">Featured</a>
+                <a href="featured.html" class = "nav-link" id ="${PAGE_TABLE[0][0]}">Featured</a>
             </li>
             <li>
-                <a href="index.html" class = "nav-link-data" id = "nav-page-link">All</a>
+                <a href="index.html" class = "nav-link" id = "${PAGE_TABLE[1][0]}">All</a>
             </li>
         </ul>
       </nav>`;
+  for (let [pageID, _, __] of PAGE_TABLE) {
+    console.log(pageID);
+
+    document.getElementById(pageID).addEventListener("click", () => {
+      currentPageID = pageID;
+    });
+  }
 }
 
 function populateHTMLData(element, id, className, innerHTML) {
@@ -29,11 +39,15 @@ function populateHTMLData(element, id, className, innerHTML) {
   };
 }
 
-function createHTMLElement(data) {
-  let element = document.createElement(data["element"]);
+function setElementFields(element, data) {
   for (let [key, value] of Object.entries(data)) {
     element[key] = value;
   }
+}
+
+function createHTMLElement(data) {
+  let element = document.createElement(data["element"]);
+  setElementFields(element, data);
   return element;
 }
 
@@ -91,16 +105,21 @@ function mountLikeButton(playlist, previousLikeState) {
   // set html class to update icon
 }
 
+let randomInt = (k) => Math.floor(Math.random() * (k + 1));
 /**
  * fisher yates shuffle algorithm from wikipedia
  */
 function shuffeList(lst) {
   for (let i = lst.length - 1; i >= 1; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
+    let j = randomInt(i);
     let tmp = lst[i];
     lst[i] = lst[j];
     lst[j] = tmp;
   }
+}
+
+function sortList() {
+  return 0;
 }
 
 function iterateList(container, iterable, func) {
@@ -112,13 +131,9 @@ function mountShuffleButton(playlist, songsContainer) {
   let shuffleButtonElement = document.getElementById("shuffle-button-modal");
   shuffleButtonElement.addEventListener("click", () => {
     shuffeList(playlist.songs);
-    iterateList(
-      songsContainer,
-      playlist.songs,
-      (container, element) => {
-        container.append(createSongElement(element));
-      }
-    );
+    iterateList(songsContainer, playlist.songs, (container, element) => {
+      container.append(createSongElement(element));
+    });
   });
 }
 
@@ -131,7 +146,7 @@ function createPlaylistElement(playlist) {
       `
       <img class="playlist-cover-image" src=${playlist.playlist_art} alt="" />
           <h3 class="playlist-title">${playlist.playlist_name}</h3>
-          <p class="playlist-creator-name">${playlist.playlist_creator}</p>
+          <p class="playlist-creator-name">${playlist.playlist_creator}</p> 
           <div class="playlist-likes-flex-container" id="playlist-likes-flex-container-${playlist.playlistID}">
           </div>
         </div>
@@ -143,42 +158,94 @@ function createPlaylistElement(playlist) {
 }
 
 function openModal(playlist) {
-  document.getElementById("playlist-title").innerText = playlist.playlist_name;
-  document.getElementById("playlist-cover-image").src = playlist.playlist_art;
-  document.getElementById("playlist-creator-name").innerText = playlist.playlist_creator;
+  modalFields = {
+    "playlist-title": { innerText: playlist.playlist_name },
+    "playlist-cover-image": { src: playlist.playlist_art },
+    "playlist-creator-name": { innerText: playlist.playlist_creator },
+  };
+  for (let [elementId, elementAttributes] of Object.entries(modalFields)) {
+    setElementFields(document.getElementById(elementId), elementAttributes);
+  }
   let songsContainer = document.getElementById("song-cards");
-  iterateList(songsContainer, playlist.songs, (container, element) => { container.append(createSongElement(element)); });
+  iterateList(songsContainer, playlist.songs, (container, element) => {
+    container.append(createSongElement(element));
+  });
   mountShuffleButton(playlist, songsContainer);
   modal.style.display = "block";
 }
 
-function renderPlaylists(playlists) {
-  let playlistsContainer = document.getElementById("playlist-cards")
-  iterateList(playlistsContainer, playlists,
-    (container, element) => {
-      container.append(createPlaylistElement(element));
-      mountLikeButton(element, false);
-    }
-  );
+function renderFeaturedPlaylist() {
+  let chosenPlaylist = playlists.at(randomInt(playlists.length - 1));
+  featuredPlaylistFields = {
+    "playlist-title": { innerText: chosenPlaylist.playlist_name },
+    "playlist-cover-image": { src: chosenPlaylist.playlist_art },
+    "playlist-creator-name": { innerText: chosenPlaylist.playlist_creator },
+  };
+  for (let [elementId, elementAttributes] of Object.entries(
+    featuredPlaylistFields
+  )) {
+    setElementFields(document.getElementById(elementId), elementAttributes);
+  }
+  let songsContainer = document.getElementById("song-cards");
+  iterateList(songsContainer, chosenPlaylist.songs, (container, element) => {
+    container.append(createSongElement(element));
+  });
 }
 
+function renderPlaylists(playlists) {
+  let playlistsContainer = document.getElementById("playlist-cards");
+  iterateList(playlistsContainer, playlists, (container, element) => {
+    container.append(createPlaylistElement(element));
+    mountLikeButton(element, false);
+  });
+}
 
-
-span.onclick = function () {
-  modal.style.display = "none";
-};
-
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-};
-
-function main() {
+function AllPage() {
   renderHeaderContent();
+  if (span) {
+    span.onclick = function () {
+      modal.style.display = "none";
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    };
+  }
   renderPlaylists(playlists);
 }
 
+function FeaturedPage() {
+  renderHeaderContent();
+  renderFeaturedPlaylist();
+}
 
-main();
+function render404Page() {
+  renderHeaderContent();
+}
 
+function parsePagePath(pathname) {
+  const match = pathname.match(/\/([^\/?#]+)$/);
+  let baseName = "";
+  if (match && match[1]) {
+    baseName = match[1];
+  }
+  return baseName;
+}
+
+function pageRouter() {
+  let runnable = render404Page;
+  candidatePath = parsePagePath(window.location.pathname);
+  for (let [pageID, pageBasePath, pageRunnable] of PAGE_TABLE) {
+    console.log([pageID, pageBasePath, pageRunnable]);
+    console.log(candidatePath);
+    if (candidatePath == pageBasePath) {
+      runnable = pageRunnable;
+      break;
+    }
+  }
+  console.log(runnable);
+  runnable();
+}
+
+pageRouter();
