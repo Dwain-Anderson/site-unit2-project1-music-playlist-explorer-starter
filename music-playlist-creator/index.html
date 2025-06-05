@@ -8,38 +8,22 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header id ="banner">
-      <h1 id="page-title">Music Playlist Explorer</h1>
-      <nav>
-        <ul>
-            <li>
-                <a href="featured.html" class = "nav-link-data">Featured</a>
-            </li>
-            <li>
-                <a href="index.html" class = "nav-link-data">All</a>
-            </li>
-        </ul>
-      </nav>
-    </header>
-
+    <header id = "header-partial"></header>
     <main>
-      <div id="playlist-cards">
-      </div>
+      <div id="playlist-cards"></div>
     </main>
 
     <div id="playlist-card-modal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <img id="playlist-cover-image" src="#" alt="playlist Image" />
-        <h2 id="playlist-title"></h2>
-        <h3 id="playlist-creator-name"></h3>
+        <img id= "playlist-cover-image" src="#" alt="playlist Image" />
+        <h2 id= "playlist-title"></h2>
+        <h3 id= "playlist-creator-name"></h3>
         <div id = "song-cards" ></div>
       </div>
     </div>
 
-    <footer>
-      <p>placeholder footer</p>
-    </footer>
+    <footer><p>placeholder footer</p></footer>
     <script src="data/data.js"></script>
     <script src="script.js"></script>
   </body>
