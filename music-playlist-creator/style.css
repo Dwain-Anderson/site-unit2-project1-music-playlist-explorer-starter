@@ -76,7 +76,7 @@ li a:hover {
    color: #000;
 }
 
-.playlist-cards {
+#playlist-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
@@ -154,6 +154,17 @@ li a:hover {
 }
 
 
+
+#song-cards {
+
+
+}
+
+
+.song-card {
+
+}
+
 #song-duration {
 
 }
@@ -202,6 +213,7 @@ footer p {
    overflow: auto; /* Enable scroll if needed */
    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+
 .modal-content {
    background-color: #fefefe;
    margin: 15% auto; /* 15% from the top and centered */

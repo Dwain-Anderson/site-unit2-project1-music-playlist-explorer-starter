@@ -1,26 +1,66 @@
 const modal = document.getElementById("playlist-card-modal");
 const span = document.getElementsByClassName("close")[0];
 
-
-function openModal(playlistDetails) {
-   document.getElementById('playlist-title').innerText = playlistDetails.title;
-   document.getElementById('playlist-cover-image').src = playlistDetails.imageUrl;
-   document.getElementById('playlist-creator-name').innerText = playlistDetails.creatorName;
-
-   document.getElementById('song-title').innerText =  playlistDetails.songs[0].title;
-   document.getElementById('song-image').src = playlistDetails.songs[0].imageUrl;
-   document.getElementById('song-artist-name').innerText =  playlistDetails.songs[0].artistName;
-   document.getElementById('song-album-name').innerText = playlistDetails.songs[0].albumName;
-   document.getElementById('song-duration').innerText =  playlistDetails.songs[0].duration;
-   modal.style.display = "block";
+function createSongElement(song) {
+  let div = document.createElement("div");
+  div.className = "song-card";
+  div.innerHTML = `<img id="song-image" src="${song.cover_art}" alt="Cover art of ${song.title}" />
+            <p class="song-title">${song.title}</p>
+            <p class="song-artist-name">${song.artist}</p>
+            <p class="song-album-name">${song.album}</p>
+            <p class="song-duration">${song.duration}</p>
+   `;
+  return div;
 }
 
-span.onclick = function() {
-   modal.style.display = "none";
+function createPlaylistElement(playlist) {
+  let div = document.createElement("div");
+  div.className = "playlist-card";
+  div.addEventListener('click', () => openModal(playlist));
+  div.innerHTML = `
+      <img class="playlist-cover-image" src=${playlist.playlist_art} alt="" />
+          <h3 class="playlist-title">${playlist.playlist_name}</h3>
+          <p class="playlist-creator-name">${playlist.playlist_creator}</p>
+          <div class="playlist-likes-flex-container">
+            <button class="playlist-like-button">
+              <img src="#" class="playlist-like-heart-icon" />
+            </button>
+             <p class="playlist-like-count">${playlist.likeCount}</p>
+          </div>
+        </div>
+      `;
+  return div;
 }
 
-window.onclick = function(event) {
-   if (event.target == modal) {
-      modal.style.display = "none";
-   }
+function openModal(playlist) {
+  document.getElementById("playlist-title").innerText = playlist.playlist_name;
+  document.getElementById("playlist-cover-image").src = playlist.playlist_art;
+  document.getElementById("playlist-creator-name").innerText = playlist.playlist_creator;
+  let songsCardsElement = document.getElementById("song-cards");
+  songsCardsElement.replaceChildren();
+  playlist.songs.forEach((song) => songsCardsElement.append(createSongElement(song)));
+  modal.style.display = "block";
 }
+
+
+
+function loadPlaylists(playlists) {
+  let playlistContainer = document.getElementById("playlist-cards");
+  playlists.forEach((playlist) =>
+    playlistContainer.appendChild(createPlaylistElement(playlist))
+  );
+}
+
+span.onclick = function () {
+  modal.style.display = "none";
+};
+
+window.onclick = function (event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+};
+
+
+
+document.body.onload = () => {loadPlaylists(playlists);}
