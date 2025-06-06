@@ -4,7 +4,7 @@ Submitted by: Dwain Anderson
 
 Estimated time spent: **15** hours spent in total
 
-Deployed Application (**required**): [Music Playlist Explorer Deployed Site](ADD_LINK_HERE)
+Deployed Application (**required**): [Music Playlist Explorer Deployed Site](https://site-unit2-project1-music-playlist-quui.onrender.com)
 
 ### Application Features
 
