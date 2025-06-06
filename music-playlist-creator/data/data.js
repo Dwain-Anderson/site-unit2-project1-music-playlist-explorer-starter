@@ -1,3 +1,4 @@
+
 let playlists = [
   {
     "playlistID": 0,
@@ -5,6 +6,7 @@ let playlists = [
     "playlist_creator": "Melody Maven",
     "playlist_art": "https://picsum.photos/id/36/200",
     "likeCount": 0,
+    "dateAdded": new Date(2023, 0, 15),
     "songs": [
       {
         "songID": 0,
@@ -54,6 +56,7 @@ let playlists = [
     "playlist_creator": "Groove Guardian",
     "playlist_art": "https://picsum.photos/id/117/200",
     "likeCount": 10,
+    "dateAdded": new Date(2023, 1, 3), // Feb 3, 2023
     "songs": [
       {
         "songID": 5,
@@ -103,6 +106,7 @@ let playlists = [
     "playlist_creator": "Harmony Herald",
     "playlist_art": "https://picsum.photos/id/1077/200",
     "likeCount": 2,
+    "dateAdded": new Date(2023, 2, 20), // Mar 20, 2023
     "songs": [
       {
         "songID": 10,
@@ -152,6 +156,7 @@ let playlists = [
     "playlist_creator": "Playlist Pioneer",
     "playlist_art": "https://picsum.photos/id/314/200",
     "likeCount": 5,
+    "dateAdded": new Date(2023, 3, 12),
     "songs": [
       {
         "songID": 15,
@@ -201,6 +206,7 @@ let playlists = [
     "playlist_creator": "Tempo Tactician",
     "playlist_art": "https://picsum.photos/id/449/200",
     "likeCount": 0,
+    "dateAdded": new Date(2023, 4, 5),
     "songs": [
       {
         "songID": 20,
@@ -250,6 +256,7 @@ let playlists = [
     "playlist_creator": "Sonic Sage",
     "playlist_art": "https://picsum.photos/id/115/200",
     "likeCount": 24,
+    "dateAdded": new Date(2023, 5, 18),
     "songs": [
       {
         "songID": 25,
@@ -299,6 +306,7 @@ let playlists = [
     "playlist_creator": "Vinyl Virtuoso",
     "playlist_art": "https://picsum.photos/id/815/200",
     "likeCount": 3,
+    "dateAdded": new Date(2023, 6, 7),
     "songs": [
       {
         "songID": 30,
@@ -348,6 +356,7 @@ let playlists = [
     "playlist_creator": "Melody Maven",
     "playlist_art": "https://picsum.photos/id/22/200",
     "likeCount": 3,
+    "dateAdded": new Date(2023, 7, 22),
     "songs": [
       {
         "songID": 35,
@@ -397,6 +406,7 @@ let playlists = [
     "playlist_creator": "Bassline Buddy",
     "playlist_art": "https://picsum.photos/id/836/200",
     "likeCount": 0,
+    "dateAdded": new Date(2023, 8, 14),
     "songs": [
       {
         "songID": 40,
@@ -446,6 +456,7 @@ let playlists = [
     "playlist_creator": "Acoustic Alchemist",
     "playlist_art": "https://picsum.photos/id/452/200",
     "likeCount": 7,
+    "dateAdded": new Date(2023, 9, 30),
     "songs": [
       {
         "songID": 45,

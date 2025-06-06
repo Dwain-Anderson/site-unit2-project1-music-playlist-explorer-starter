@@ -10,19 +10,80 @@
   <body>
     <header id = "header-partial"></header>
     <main>
-      <div id="sort-partial"></div>
-      <div id="search-partial"></div>
-      <div id="playlist-cards"></div>
+      <section id="stretch-features" class="panel row">
+        <h2 class="hidden">Playlist Controls</h2>
+
+        <div id="sort-partial" class="col">
+          <h3 class="hidden">Sort</h3>
+          <div id="sort-container" class="container">
+            <form id="sort-form" class="form">
+              <label for="sort-select">Sort playlists:</label>
+              <select id="sort-select" class="select" aria-label="Sort criteria">
+                <option value="default">By Default</option>
+                <option value="name">By Playlist Name</option>
+                <option value="creator">By Creator</option>
+                <option value="likes">By Likes</option>
+                <option value="date">By Date Added</option>
+              </select>
+              <button id="sort-button" class="btn" type="submit">Sort</button>
+            </form>
+          </div>
+        </div>
+
+        <div id="search-partial" class="col">
+          <h3 class="hidden">Search</h3>
+          <div id="search-container" class="container">
+            <form id="search-form" class="form">
+              <label for="search-input">Search for playlists</label>
+              <div class="search-controls">
+                <select id="search-type" class="select select-small">
+                  <option value="name">By Name</option>
+                  <option value="creator">By Creator</option>
+                </select>
+                <input type="search" id="search-input" class="input" name="search-input" aria-label="Search playlists" placeholder="Enter search term..." />
+                <button type="button" id="clear-search" class="btn btn-clear" aria-label="Clear search">×</button>
+              </div>
+              <button type="submit" class="btn" aria-label="Search">Search</button>
+            </form>
+          </div>
+        </div>
+
+        <div id="add-playlist-partial" class="col">
+          <h3 class="hidden">Create</h3>
+          <button id="add-playlist-button" class="btn btn-add" aria-label="Create new playlist">Add New Playlist</button>
+        </div>
+      </section>
+      <div id="playlist-cards" class="cards"></div>
     </main>
 
     <div id="playlist-card-modal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <img id= "playlist-cover-image" src="#" alt="playlist Image" />
-        <button class = "shuffle-button" id = "shuffle-button-modal">SHUFFLE</button>
-        <h2 id= "playlist-title"></h2>
-        <h3 id= "playlist-creator-name"></h3>
-        <div id = "song-cards" ></div>
+        <div class="modal-img">
+          <img id="playlist-cover-image" src="#" alt="Playlist Image" />
+          <button class="btn" id="shuffle-button-modal">SHUFFLE</button>
+        </div>
+        <div>
+          <h2 id="playlist-title"></h2>
+          <h3 id="playlist-creator-name"></h3>
+        </div>
+        <div id="song-cards" class="modal-body"></div>
+      </div>
+    </div>
+
+    <div id="add-playlist-modal" class="modal">
+      <div class="modal-content">
+        <span class="close close-add-modal">&times;</span>
+        <form id="add-form" class="form">
+          <h3>Add a new playlist</h3>
+          <label for="playlist-name">Playlist Name</label>
+          <input type="text" id="playlist-name" class="input" name="playlist-name" required />
+          <label for="playlist-creator">Creator Name</label>
+          <input type="text" id="playlist-creator" class="input" name="playlist-creator" required />
+          <label for="playlist-art">Cover Art URL</label>
+          <input type="text" id="playlist-art" class="input" name="playlist-art" required />
+          <button type="submit" id="add-button" class="btn">Add Playlist</button>
+        </form>
       </div>
     </div>
 
