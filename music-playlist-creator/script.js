@@ -1,9 +1,9 @@
 const PAGE_TABLE = {
-  "ALL": {
+  ALL: {
     path: "index.html",
     runnable: AllPage,
   },
-  "FEATURED": {
+  FEATURED: {
     path: "featured.html",
     runnable: FeaturedPage,
   },
@@ -13,16 +13,18 @@ const ASSET_URLS = {
   trash: "https://img.icons8.com/material-outlined/24/ffffff/trash--v1.png",
   edit: "https://img.icons8.com/material-outlined/24/ffffff/edit--v1.png",
   defaultPlaylistCover: "/assets/img/playlist.png",
-  defaultSongCover: "/assets/img/song.png"
+  defaultSongCover: "/assets/img/song.png",
 };
 
 const modal = document.getElementById("playlist-card-modal");
 const span = document.getElementsByClassName("close")[0];
 
 let currentPageID = "ALL";
+
+// 5/6: If I had more time I would change this to a variable sized cache of max cardinality equal to Floor(|Playlists|*Average(|Playlists.songs|))//3
+// I would use an eviction policy, possibly LRU or Round-Robin, and lastly I would change the hash function in order to make it easier to copy over & write backthe
+// elements of the map to localStorage on page reload.
 let elementCache = new Map();
-
-
 
 /**
  * Renders the header content with navigation links.
@@ -34,10 +36,14 @@ function renderHeaderContent() {
       <nav>
         <ul>
             <li>
-                <a href="featured.html" class="nav-link ${currentPageID === 'FEATURED' ? 'active' : ''}" id="FEATURED">Featured</a>
+                <a href="featured.html" class="nav-link ${
+                  currentPageID === "FEATURED" ? "active" : ""
+                }" id="FEATURED">Featured</a>
             </li>
             <li>
-                <a href="index.html" class="nav-link ${currentPageID === 'ALL' ? 'active' : ''}" id="ALL">All</a>
+                <a href="index.html" class="nav-link ${
+                  currentPageID === "ALL" ? "active" : ""
+                }" id="ALL">All</a>
             </li>
         </ul>
       </nav>`,
@@ -87,14 +93,11 @@ function setElementFields(element, data) {
   }
 }
 
-  function hash(data) {
-    let cacheKey = ""
-    for (let [key, value] of Object.entries(data)) {
-      const value = data[key];
-      cacheKey += `${key}:${value}|`;
-    }
-    return cacheKey;
-  }
+function hash(data) {
+  return Object.entries(data)
+    .map(([key, value]) => `${key}:${value}|`)
+    .join("");
+}
 
 /**
  * Creates an HTML element with specified properties.
@@ -102,16 +105,13 @@ function setElementFields(element, data) {
  * @returns {HTMLElement} The created HTML element
  */
 function createHTMLElement(data) {
-  // todo: add cache here if time permits
   let cacheKey = hash(data);
   if (elementCache.has(cacheKey)) {
-    console.log('cache')
-    return elementCache.get(cacheKey)
+    return elementCache.get(cacheKey);
   } else {
-    console.log('no cache')
     let element = document.createElement(data["element"]);
     setElementFields(element, data);
-    elementCache.set(cacheKey, element)
+    elementCache.set(cacheKey, element);
     return element;
   }
 }
@@ -151,7 +151,9 @@ function mountLikeButton(playlist, previousLikeState) {
       "button",
       `playlist-like-button-${playlist.playlistID}`,
       "btn-icon",
-      `<span class="heart-icon ${previousLikeState ? 'liked' : ''}" id="playlist-like-heart-icon-${playlist.playlistID}"></span>`
+      `<span class="heart-icon ${
+        previousLikeState ? "liked" : ""
+      }" id="playlist-like-heart-icon-${playlist.playlistID}"></span>`
     )
   );
   let likeCountElement = createHTMLElement(
@@ -175,11 +177,13 @@ function mountLikeButton(playlist, previousLikeState) {
     }
     likeCountElement.innerText = playlist.likeCount;
     previousLikeState = !previousLikeState;
-    const heartIcon = document.getElementById(`playlist-like-heart-icon-${playlist.playlistID}`);
+    const heartIcon = document.getElementById(
+      `playlist-like-heart-icon-${playlist.playlistID}`
+    );
     if (previousLikeState) {
-      heartIcon.classList.add('liked');
+      heartIcon.classList.add("liked");
     } else {
-      heartIcon.classList.remove('liked');
+      heartIcon.classList.remove("liked");
     }
   });
 }
@@ -190,11 +194,12 @@ function mountLikeButton(playlist, previousLikeState) {
  * @returns {number} Random integer
  */
 const randomInt = (k) => Math.floor(Math.random() * (k + 1));
+
 /**
  * Shuffles an array in-place using Fisher-Yates algorithm, (https://en.wikipedia.org/wiki/Fisher–Yates_shuffle)
  * @param {Array} lst - Array to shuffle
  */
-const shuffleList = lst => {
+const shuffleList = (lst) => {
   for (let i = lst.length - 1; i >= 1; i--) {
     const j = randomInt(i);
     [lst[i], lst[j]] = [lst[j], lst[i]];
@@ -222,7 +227,8 @@ function mountShuffleButton(playlist, songsContainer) {
   shuffleButtonElement.addEventListener("click", () => {
     shuffleList(playlist.songs);
     iterateList(songsContainer, playlist.songs, (container, element) =>
-      container.append(createSongElement(element)));
+      container.append(createSongElement(element))
+    );
   });
 }
 
@@ -270,7 +276,7 @@ function openModal(playlist) {
   });
   mountShuffleButton(playlist, songsContainer);
   modal.style.display = "block";
-  document.body.classList.add('modal-open');
+  document.body.classList.add("modal-open");
 }
 
 /**
@@ -281,7 +287,10 @@ function renderFeaturedPlaylist() {
   let chosenPlaylist = playlists[randomInt(playlists.length - 1)];
   featuredPlaylistFields = {
     "playlist-title": { innerText: chosenPlaylist.playlist_name },
-    "playlist-cover-image": { src: chosenPlaylist.playlist_art, className: "featured-img" },
+    "playlist-cover-image": {
+      src: chosenPlaylist.playlist_art,
+      className: "featured-img",
+    },
     "playlist-creator-name": { innerText: chosenPlaylist.playlist_creator },
   };
   for (let [elementId, elementAttributes] of Object.entries(
@@ -320,18 +329,18 @@ function setupModal(modalElement, openTrigger, closeTrigger) {
 
   addEventWithGuard(openTrigger, "click", () => {
     modalElement.style.display = "block";
-    document.body.classList.add('modal-open');
+    document.body.classList.add("modal-open");
   });
 
   addEventWithGuard(closeTrigger, "click", () => {
     modalElement.style.display = "none";
-    document.body.classList.remove('modal-open');
+    document.body.classList.remove("modal-open");
   });
 
   window.addEventListener("click", (event) => {
     if (event.target === modalElement) {
       modalElement.style.display = "none";
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove("modal-open");
     }
   });
 }
@@ -359,7 +368,6 @@ function mountSort() {
   let sortMenuForm = document.getElementById("sort-form");
   addEventWithGuard(sortMenuForm, "submit", (e) => {
     e.preventDefault();
-    console.log("sort");
     const sortBy = document.getElementById("sort-select").value;
     let sortedPlaylists = [...playlists];
     switch (sortBy) {
@@ -370,18 +378,23 @@ function mountSort() {
         sortedPlaylists.sort((a, b) => b.likeCount - a.likeCount);
         break;
       case "name":
-        sortedPlaylists.sort((a, b) => a.playlist_name.localeCompare(b.playlist_name));
+        sortedPlaylists.sort((a, b) =>
+          a.playlist_name.localeCompare(b.playlist_name)
+        );
         break;
       case "creator":
-        sortedPlaylists.sort((a, b) => a.playlist_creator.localeCompare(b.playlist_creator));
+        sortedPlaylists.sort((a, b) =>
+          a.playlist_creator.localeCompare(b.playlist_creator)
+        );
         break;
-      case "default": default:
+      case "default":
+      default:
         sortedPlaylists.sort((a, b) => b.playlistID - a.playlistID);
         break;
-  }
-  renderPlaylists(sortedPlaylists);
-})}
-
+    }
+    renderPlaylists(sortedPlaylists);
+  });
+}
 
 /**
  * Sets up the add playlist functionality.
@@ -395,8 +408,11 @@ function mountAddButton() {
   setupModal(addMenuElement, addButtonElement, closeAddModal);
   addEventWithGuard(addMenuForm, "submit", (e) => {
     e.preventDefault();
-    const [nameEl, creatorEl, artEl] = ["playlist-name", "playlist-creator", "playlist-art"]
-      .map(id => document.getElementById(id));
+    const [nameEl, creatorEl, artEl] = [
+      "playlist-name",
+      "playlist-creator",
+      "playlist-art",
+    ].map((id) => document.getElementById(id));
     const newPlaylist = {
       playlistID: playlists.length + 1,
       playlist_name: nameEl.value,
@@ -404,7 +420,7 @@ function mountAddButton() {
       playlist_art: artEl.value,
       likeCount: 0,
       dateAdded: new Date(),
-      songs: []
+      songs: [],
     };
     playlists.push(newPlaylist);
     renderPlaylists(playlists);
@@ -425,9 +441,11 @@ function mountActionButton(type, playlist, playlistElement) {
       className: "btn-delete",
       text: `<img src="${ASSET_URLS.trash}" class="icon" alt="Delete playlist">`,
       action: () => {
-        playlists = playlists.filter(p => p.playlistID !== playlist.playlistID);
+        playlists = playlists.filter(
+          (p) => p.playlistID !== playlist.playlistID
+        );
         renderPlaylists(playlists);
-      }
+      },
     },
     edit: {
       className: "btn-icon btn-edit",
@@ -455,12 +473,21 @@ function mountActionButton(type, playlist, playlistElement) {
         );
 
         playlistElement.style.display = "none";
-        playlistElement.parentNode.insertBefore(editForm, playlistElement.nextSibling);
+        playlistElement.parentNode.insertBefore(
+          editForm,
+          playlistElement.nextSibling
+        );
         editForm.addEventListener("submit", (e) => {
           e.preventDefault();
-          playlist.playlist_name = document.getElementById(`edit-playlist-name-${playlist.playlistID}`).value;
-          playlist.playlist_creator = document.getElementById(`edit-playlist-creator-${playlist.playlistID}`).value;
-          playlist.playlist_art = document.getElementById(`edit-playlist-art-${playlist.playlistID}`).value;
+          playlist.playlist_name = document.getElementById(
+            `edit-playlist-name-${playlist.playlistID}`
+          ).value;
+          playlist.playlist_creator = document.getElementById(
+            `edit-playlist-creator-${playlist.playlistID}`
+          ).value;
+          playlist.playlist_art = document.getElementById(
+            `edit-playlist-art-${playlist.playlistID}`
+          ).value;
 
           editForm.remove();
           playlistElement.style.display = "block";
@@ -470,8 +497,8 @@ function mountActionButton(type, playlist, playlistElement) {
           editForm.remove();
           playlistElement.style.display = "block";
         });
-      }
-    }
+      },
+    },
   };
 
   const { className, text, action } = config[type];
@@ -485,7 +512,9 @@ function mountActionButton(type, playlist, playlistElement) {
   );
 
   if (type === "edit") {
-    const likesContainer = document.getElementById(`playlist-likes-flex-container-${playlist.playlistID}`);
+    const likesContainer = document.getElementById(
+      `playlist-likes-flex-container-${playlist.playlistID}`
+    );
     likesContainer.appendChild(buttonElement);
   } else {
     playlistElement.appendChild(buttonElement);
@@ -499,7 +528,6 @@ function mountActionButton(type, playlist, playlistElement) {
   });
 }
 
-
 /**
  * Creates and mounts a delete button for a playlist.
  * @param {Object} playlist - Playlist data object
@@ -509,7 +537,6 @@ function mountDeleteButton(playlist, playlistElement) {
   mountActionButton("delete", playlist, playlistElement);
 }
 
-
 /**
  * Creates and mounts an edit button for a playlist.
  * @param {Object} playlist - Playlist data object
@@ -518,7 +545,6 @@ function mountDeleteButton(playlist, playlistElement) {
 function mountEditButton(playlist, playlistElement) {
   mountActionButton("edit", playlist, playlistElement);
 }
-
 
 /**
  * Calculates the Levenshtein edit distance between two strings using the space-efficient version of the algorithm. (https://en.wikipedia.org/wiki/Levenshtein_distance)
@@ -532,19 +558,18 @@ function editDistance(s, t) {
   let v0 = new Array(n);
   let v1 = new Array(n);
   for (let i = 0; i <= n; i++) {
-    v0[i] = i
+    v0[i] = i;
   }
   for (let i = 0; i < m; i++) {
-    v1[0] = i + 1
+    v1[0] = i + 1;
     for (let j = 0; j < n; j++) {
-     let cost = s[i] === t[j] ? 0 : 1;
-      v1[j + 1] = Math.min(v1[j] + 1,v0[j + 1] + 1, v0[j] + cost);
+      let cost = s[i] === t[j] ? 0 : 1;
+      v1[j + 1] = Math.min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost);
     }
     [v0, v1] = [v1, v0];
   }
-  return v0[n]
+  return v0[n];
 }
-
 
 /**
  * Sets up the search functionality for playlists.
@@ -570,9 +595,10 @@ function mountSearch() {
     let searchPlaylists = [...playlists];
     let editDistances = new Map();
     for (let playlist of searchPlaylists) {
-      const compareValue = searchByType === "name"
-        ? playlist.playlist_name.toLowerCase()
-        : playlist.playlist_creator.toLowerCase();
+      const compareValue =
+        searchByType === "name"
+          ? playlist.playlist_name.toLowerCase()
+          : playlist.playlist_creator.toLowerCase();
       let dist = editDistance(query, compareValue);
       editDistances.set(playlist.playlistID, dist);
     }
@@ -583,7 +609,6 @@ function mountSearch() {
   });
 }
 
-
 /**
  * Initializes the main page with all playlists.
  * Sets up all UI components and renders playlists.
@@ -593,11 +618,11 @@ function AllPage() {
   if (span) {
     span.onclick = function () {
       modal.style.display = "none";
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove("modal-open");
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.style.display = "none";
-          document.body.classList.remove('modal-open');
+          document.body.classList.remove("modal-open");
         }
       };
     };
@@ -624,9 +649,7 @@ function FeaturedPage() {
  */
 function pageRouter() {
   let pageRunnable = null;
-  let bodyElement = document.querySelector("body");
-  let candidatePageID = bodyElement.id;
-  candidatePageID = candidatePageID.substring(7);
+  let candidatePageID = document.querySelector("body").id.substring(7);
   for (let [pageID, pageData] of Object.entries(PAGE_TABLE)) {
     if (pageID == candidatePageID) {
       pageRunnable = pageData.runnable;
