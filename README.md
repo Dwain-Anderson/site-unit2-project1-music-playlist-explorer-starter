@@ -83,9 +83,9 @@ Deployed Application (**required**): [Music Playlist Explorer Deployed Site](ADD
     - [x ] Name
     - [ x] Author
     - [x ] Cover image
-    - [ x] Add one or more songs to the playlist, specifying the song's:
-      - [x ] Title
-      - [x ] Artist
+    - [ ] Add one or more songs to the playlist, specifying the song's:
+      - [ ] Title
+      - [ ] Artist
   - [x ] The resulting playlist should display in the grid view.
   - [ x] **VIDEO WALKTHROUGH SPECIAL INSTRUCTIONS:** For ease of grading, please show yourself adding at least two songs to the playlist.
 

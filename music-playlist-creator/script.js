@@ -605,6 +605,7 @@ function mountSearch() {
     searchPlaylists.sort((a, b) => {
       return editDistances.get(a.playlistID) - editDistances.get(b.playlistID);
     });
+    searchPlaylists = searchPlaylists.slice(0, Math.ceil(searchPlaylists.length * 0.3));
     renderPlaylists(searchPlaylists);
   });
 }
