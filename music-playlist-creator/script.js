@@ -1,22 +1,17 @@
 const PAGE_TABLE = {
-  ALL: {
+  "ALL": {
     path: "index.html",
     runnable: AllPage,
   },
-  FEATURED: {
+  "FEATURED": {
     path: "featured.html",
     runnable: FeaturedPage,
   },
 };
 
 const ASSET_URLS = {
-
-  heartLiked: "https://img.icons8.com/emoji/452/heart-suit.png",
-  heartUnliked: "https://img.icons8.com/emoji/452/heart.png",
-
   trash: "https://img.icons8.com/material-outlined/24/ffffff/trash--v1.png",
   edit: "https://img.icons8.com/material-outlined/24/ffffff/edit--v1.png",
-
   defaultPlaylistCover: "/assets/img/playlist.png",
   defaultSongCover: "/assets/img/song.png"
 };
@@ -25,7 +20,7 @@ const modal = document.getElementById("playlist-card-modal");
 const span = document.getElementsByClassName("close")[0];
 
 let currentPageID = "ALL";
-let playlistsCache = new Map();
+let elementCache = new Map();
 
 
 
@@ -92,6 +87,15 @@ function setElementFields(element, data) {
   }
 }
 
+  function hash(data) {
+    let cacheKey = ""
+    for (let [key, value] of Object.entries(data)) {
+      const value = data[key];
+      cacheKey += `${key}:${value}|`;
+    }
+    return cacheKey;
+  }
+
 /**
  * Creates an HTML element with specified properties.
  * @param {Object} data - Element properties from populateHTMLData
@@ -99,9 +103,17 @@ function setElementFields(element, data) {
  */
 function createHTMLElement(data) {
   // todo: add cache here if time permits
-  let element = document.createElement(data["element"]);
-  setElementFields(element, data);
-  return element;
+  let cacheKey = hash(data);
+  if (elementCache.has(cacheKey)) {
+    console.log('cache')
+    return elementCache.get(cacheKey)
+  } else {
+    console.log('no cache')
+    let element = document.createElement(data["element"]);
+    setElementFields(element, data);
+    elementCache.set(cacheKey, element)
+    return element;
+  }
 }
 
 /**
@@ -366,7 +378,6 @@ function mountSort() {
       case "default": default:
         sortedPlaylists.sort((a, b) => b.playlistID - a.playlistID);
         break;
-
   }
   renderPlaylists(sortedPlaylists);
 })}
@@ -608,30 +619,17 @@ function FeaturedPage() {
 }
 
 /**
- * Extracts the base filename from a path.
- * @param {string} pathname - Path to parse
- * @returns {string} Base filename
- */
-function parsePagePath(pathname) {
-  const match = pathname.match(/\/([^\/?#]+)$/);
-  let baseName = "";
-  if (match && match[1]) {
-    baseName = match[1];
-  }
-  return baseName;
-}
-
-/**
  * Routes to the appropriate page based on the URL.
  * Determines which page function to run based on the path.
  */
 function pageRouter() {
   let pageRunnable = null;
-  candidatePath = parsePagePath(window.location.pathname);
-  for (let [_, pageData] of Object.entries(PAGE_TABLE)) {
-    if (candidatePath == pageData.path) {
+  let bodyElement = document.querySelector("body");
+  let candidatePageID = bodyElement.id;
+  candidatePageID = candidatePageID.substring(7);
+  for (let [pageID, pageData] of Object.entries(PAGE_TABLE)) {
+    if (pageID == candidatePageID) {
       pageRunnable = pageData.runnable;
-      break;
     }
   }
   if (pageRunnable) {

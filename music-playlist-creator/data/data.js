@@ -1,4 +1,3 @@
-
 let playlists = [
   {
     "playlistID": 0,
@@ -56,7 +55,7 @@ let playlists = [
     "playlist_creator": "Groove Guardian",
     "playlist_art": "https://picsum.photos/id/117/200",
     "likeCount": 10,
-    "dateAdded": new Date(2023, 1, 3), // Feb 3, 2023
+    "dateAdded": new Date(2023, 1, 3),
     "songs": [
       {
         "songID": 5,
@@ -106,7 +105,7 @@ let playlists = [
     "playlist_creator": "Harmony Herald",
     "playlist_art": "https://picsum.photos/id/1077/200",
     "likeCount": 2,
-    "dateAdded": new Date(2023, 2, 20), // Mar 20, 2023
+    "dateAdded": new Date(2023, 2, 20), 
     "songs": [
       {
         "songID": 10,

@@ -143,7 +143,6 @@ footer {
 }
 
 
-/* Form styles for modal and edit forms */
 .modal .form, form[id^="playlist-edit-form"] {
     flex-direction: column;
     align-items: flex-start;
@@ -534,7 +533,7 @@ form[id^="playlist-edit-form"] .btn-container {
     display: none !important;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
     .row {
         flex-direction: column;
